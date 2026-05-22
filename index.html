@@ -397,42 +397,163 @@
             }
         }
 
-        @media (max-width:600px){
+        /* =========================
+            スマホ最適化
+        ========================= */
+        @media (max-width: 600px) {
 
-            #list{
-                grid-template-columns:1fr;
+            body{
+                padding:0;
             }
 
+            main.container{
+                width:100%;
+                max-width:100%;
+                padding:0.8rem;
+            }
+
+            /* ヘッダー */
             .header-flex{
                 flex-direction:column;
-                align-items:flex-start;
+                align-items:stretch;
+                gap:12px;
+            }
+
+            .header-flex h2{
+                font-size:1.5rem;
+                margin-bottom:0;
             }
 
             .toolbar{
                 width:100%;
+                flex-direction:column;
+                align-items:stretch;
+                gap:8px;
+            }
+
+            .toolbar input{
+                width:100%;
+                font-size:16px; /* iPhoneズーム防止 */
+            }
+
+            .add-btn{
+                width:100% !important;
+                height:44px;
+                font-size:0.95rem;
+            }
+
+            /* ガイド */
+            .usage-guide{
+                font-size:0.75rem;
+                padding:0.7rem;
+            }
+
+            /* タグ */
+            #tag-cloud{
+                gap:6px;
+                margin-bottom:1rem;
+            }
+
+            .tag-chip{
+                font-size:0.72rem;
+                padding:5px 12px;
+            }
+
+            /* カード一覧 */
+            #list{
+                grid-template-columns:1fr;
+                gap:10px;
+            }
+
+            article.card{
+                padding:0.9rem;
+                border-radius:10px;
+            }
+
+            .card-title{
+                font-size:1rem;
+                line-height:1.4;
+            }
+
+            .card-body{
+                font-size:0.82rem;
+                line-height:1.6;
+            }
+
+            .author-tag{
+                font-size:0.68rem;
+            }
+
+            /* モーダル */
+            dialog{
+                padding:0;
             }
 
             dialog article{
-                width:96vw !important;
+                width:100% !important;
+                max-width:100% !important;
 
-                max-height:92vh;
+                min-height:100vh;
 
-                border-radius:16px;
-            }
+                margin:0;
+                border-radius:0;
 
-            #viewMode,
-            #editMode{
                 padding:1rem;
             }
 
+            /* モーダルタイトル */
             #modalTitle{
-                font-size:1.3rem !important;
+                font-size:1.25rem !important;
+                line-height:1.4;
+                padding-right:28px;
             }
 
+            /* 本文 */
             #viewBody{
+
                 font-size:0.95rem;
 
-                line-height:1.8;
+                line-height:1.9;
+
+                padding:1rem;
+
+                max-height:55vh;
+            }
+
+            /* 編集フォーム */
+            #editMode .grid{
+                grid-template-columns:1fr;
+            }
+
+            #editMode input,
+            #editMode textarea{
+                font-size:16px; /* iOSズーム防止 */
+            }
+
+            #editMode textarea{
+                min-height:220px;
+            }
+
+            /* ボタン */
+            .btn-sm{
+                font-size:0.72rem !important;
+                padding:0.35rem 0.7rem !important;
+            }
+
+            #submitBtn{
+                width:100%;
+                height:46px;
+                margin-top:1.2rem;
+            }
+
+            /* footer */
+            #viewMode footer{
+                gap:6px;
+                flex-wrap:wrap;
+            }
+
+            #viewMode footer button{
+                flex:1;
             }
         }
     </style>

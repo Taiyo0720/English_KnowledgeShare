@@ -406,13 +406,37 @@
         ========================= */
         @media (max-width: 600px) {
 
-            :root{
-                --pico-font-size:15px;
+            html,
+            body{
+                margin:0;
+                padding:0;
+
+                width:100%;
+                min-height:100%;
+
+                background:#f5f5f2 !important;
             }
 
+            /* ページ全体 */
             body{
-                padding:0;
+
+                min-height:100dvh;
+
+                background:#f5f5f2 !important;
+
+                overflow-x:hidden;
+            }
+
+            /* メイン領域 */
+            main.container{
+
+                min-height:100dvh;
+
                 background:#f5f5f2;
+            }
+
+            :root{
+                --pico-font-size:15px;
             }
 
             main.container{
@@ -422,7 +446,7 @@
             }
 
             /* =========================
-            ヘッダー
+                ヘッダー
             ========================= */
 
             .header-flex{

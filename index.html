@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Learning DB</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>
+        :root { --pico-font-size: 14px; --pico-border-radius: 8px; }
+        body { background-color: #f7f7f5; color: #37352f; }
+        .container { max-width: 800px; margin-top: 2rem; }
+        
+        /* カードのデザイン */
+        article.card { cursor: pointer; padding: 1.2rem; margin-bottom: 1rem; background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; }
+        article.card:hover { border-color: #3498db; }
+        .card-title { margin: 0 0 0.5rem 0; font-weight: 700; color: #2c3e50; }
+        .card-body { color: #666; font-size: 0.9rem; margin-bottom: 0.8rem; line-height: 1.4; }
+        
+        /* 小さなボタン */
+        .btn-sm { font-size: 0.7rem; padding: 4px 10px; width: auto; display: inline-block; margin-right: 5px; }
+        
+        .tag { display: inline-block; padding: 2px 8px; margin-right: 5px; border-radius: 4px; font-size: 0.7rem; background: #f1f1f0; color: #444; }
+        .hidden { display: none; }
+        .toolbar { display: flex; gap: 10px; margin-bottom: 2rem; }
+        pre { white-space: pre-wrap; background: #f9f9f9; padding: 1rem; border-radius: 8px; border: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header>
+            <h2 style="margin-bottom: 1.5rem;">English Learning DB</h2>
+            <div class="toolbar">
+                <input type="text" id="search" placeholder="検索..." oninput="render()">
+                <button onclick="openModal('add')" style="width: auto;">＋ 追加</button>
+            </div>
+        </header>
+
+        <div id="list">Loading...</div>
+    </main>
+
+    <dialog id="modal">
+        <article>
+            <header>
+                <a href="#close" aria-label="Close" class="close" onclick="closeModal()"></a>
+                <strong id="modalTitle">詳細</strong>
+            </header>
+            
+            <div id="viewMode">
+                <p id="viewAuthor" style="font-size: 0.75rem; color: #999; margin-bottom: 0.5rem;"></p>
+                <pre id="viewBody"></pre>
+                <div id="viewTags" style="margin-bottom: 1rem;"></div>
+                <footer style="text-align: right; padding-top: 1rem; border-top: 1px solid #eee;">
+                    <button class="secondary outline btn-sm" onclick="switchMode('edit')">編集</button>
+                    <button class="contrast outline btn-sm" onclick="switchMode('delete')">削除</button>
+                </footer>
+            </div>
+
+            <div id="editMode" class="hidden">
+                <form id="dataForm">
+                    <input type="hidden" id="f-id">
+                    <label>タイトル<input type="text" id="f-title" required></label>
+                    <label>本文<textarea id="f-body" rows="6" required></textarea></label>
+                    <label>タグ<input type="text" id="f-tags" placeholder="grammar, phrase"></label>
+                    <label id="authorLabel">作成者名<input type="text" id="f-author"></label>
+                    <label>パスワード<input type="password" id="f-pass" required placeholder="本人確認用"></label>
+                    <button type="button" id="submitBtn" onclick="saveData()">データを送信</button>
+                </form>
+            </div>
+        </article>
+    </dialog>
+
+    <script>
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbza9-5IolyrUWc1PzqwADb9NpRo_Kb7WghNsvSz4jtZFCJt-H05SLswXf2Wa05jjZNx/exec"; 
+        let allData = [];
+        let currentItem = null;
+
+        // パスワードをハッシュ化する関数 (SHA-256)
+        async function hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hash = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function fetchData() {
+            const res = await fetch(GAS_URL);
+            allData = await res.json();
+            render();
+        }
+
+        function render() {
+            const q = document.getElementById('search').value.toLowerCase();
+            const list = document.getElementById('list');
+            const filtered = allData.filter(item => 
+                item.Title.toLowerCase().includes(q) || item.Body.toLowerCase().includes(q) || item.Tags.toLowerCase().includes(q)
+            );
+
+            list.innerHTML = filtered.map(item => {
+                // 本文を100文字で省略
+                const shortBody = item.Body.length > 100 ? item.Body.substring(0, 100) + "..." : item.Body;
+                return `
+                <article class="card" onclick="showDetail('${item.ID}')">
+                    <div class="card-title">${item.Title}</div>
+                    <div class="card-body">${shortBody}</div>
+                    <div>${item.Tags.split(',').filter(t => t.trim()).map(t => `<span class="tag">${t.trim()}</span>`).join('')}</div>
+                </article>
+            `}).join('');
+        }
+
+        function showDetail(id) {
+            currentItem = allData.find(item => item.ID == id);
+            document.getElementById('modalTitle').innerText = currentItem.Title;
+            document.getElementById('viewBody').innerText = currentItem.Body;
+            document.getElementById('viewAuthor').innerText = "By " + currentItem.Author;
+            document.getElementById('viewTags').innerHTML = currentItem.Tags.split(',').filter(t => t.trim()).map(t => `<span class="tag">${t.trim()}</span>`).join('');
+            switchMode('view');
+            document.getElementById('modal').showModal();
+        }
+
+        function openModal(mode) {
+            currentItem = null;
+            document.getElementById('dataForm').reset();
+            document.getElementById('f-id').value = "";
+            document.getElementById('modalTitle').innerText = "新規作成";
+            switchMode('edit');
+            document.getElementById('authorLabel').classList.remove('hidden');
+            document.getElementById('modal').showModal();
+        }
+
+        function switchMode(mode) {
+            const isEdit = mode === 'edit' || mode === 'delete';
+            document.getElementById('viewMode').classList.toggle('hidden', isEdit);
+            document.getElementById('editMode').classList.toggle('hidden', !isEdit);
+            
+            if(mode === 'edit' && currentItem) {
+                document.getElementById('f-id').value = currentItem.ID;
+                document.getElementById('f-title').value = currentItem.Title;
+                document.getElementById('f-body').value = currentItem.Body;
+                document.getElementById('f-tags').value = currentItem.Tags;
+                document.getElementById('authorLabel').classList.add('hidden');
+                document.getElementById('submitBtn').innerText = "更新する";
+            } else if(mode === 'delete') {
+                document.getElementById('modalTitle').innerText = "削除の確認";
+                document.getElementById('submitBtn').innerText = "確認パスワードを入力して削除";
+            }
+        }
+
+        async function saveData() {
+            const btn = document.getElementById('submitBtn');
+            const mode = document.getElementById('f-id').value ? (document.getElementById('modalTitle').innerText.includes("削除") ? "delete" : "edit") : "add";
+            const rawPassword = document.getElementById('f-pass').value;
+
+            if(!rawPassword) return alert("パスワードを入力してください");
+
+            // 送信前にハッシュ化
+            const hashedPassword = await hashPassword(rawPassword);
+            
+            const payload = {
+                mode: mode,
+                id: document.getElementById('f-id').value,
+                title: document.getElementById('f-title').value,
+                body: document.getElementById('f-body').value,
+                tags: document.getElementById('f-tags').value,
+                author: document.getElementById('f-author').value,
+                password: hashedPassword
+            };
+
+            btn.disabled = true;
+            btn.innerText = "処理中...";
+
+            const res = await fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) });
+            const result = await res.text();
+
+            if (result === "Success") {
+                closeModal();
+                fetchData();
+            } else {
+                alert("認証失敗: " + result);
+                btn.disabled = false;
+                btn.innerText = "再試行";
+            }
+        }
+
+        function closeModal() { document.getElementById('modal').close(); }
+        fetchData();
+    </script>
+</body>
+</html>

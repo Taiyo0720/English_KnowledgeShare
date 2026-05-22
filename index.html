@@ -788,15 +788,25 @@
 
             html,
             body{
+                background:
+                    linear-gradient(
+                        180deg,
+                        #1f1f1c 0%,
+                        #262622 100%
+                    );
 
-                background:#1f1f1c !important;
-                color:#eceae4 !important;
+                color:#eceae4
             }
 
             /* ヘッダー */
 
             .header-flex h2{
+
                 color:#f3f1eb;
+
+                font-weight:800;
+
+                letter-spacing:-0.02em;
             }
 
             /* ガイド */
@@ -838,7 +848,7 @@
 
             .tag-chip.active{
 
-                background:#e8e4dc;
+                background:#f1ede5;
 
                 color:#222;
             }
@@ -849,9 +859,10 @@
 
                 background:#2a2a27;
 
-                border-color:#3a3a36;
+                border:1px solid #3a3a36;
 
-                color:#f0eee8;
+                box-shadow:
+                    0 4px 18px rgba(0,0,0,0.22);
             }
 
             .card-title{

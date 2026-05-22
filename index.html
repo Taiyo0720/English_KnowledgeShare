@@ -6,79 +6,113 @@
     <title>英語知識共有</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <style>
-        :root { --pico-font-size: 15px; --pico-border-radius: 8px; }
-        body { background-color: #f7f7f5; color: #37352f; font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif; }
-        .container { max-width: 1000px; margin-top: 2rem; }
-        
-        /* ヘッダー周り：改行防止 */
-        header { margin-bottom: 2rem; }
-        .header-flex { display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: nowrap; }
-        .header-flex h2 { margin: 0; white-space: nowrap; }
+        :root { 
+            --pico-font-size: 14px; 
+            --pico-border-radius: 6px;
+            --pico-background-color: #fcfcfb;
+            --pico-color: #37352f;
+            --pico-primary: #475569;
+        }
+
+        body { 
+            background-color: #f7f7f5; 
+            color: #37352f; 
+            font-family: "Inter", "Segoe UI", sans-serif;
+        }
+
+        /* ヘッダー・検索・ガイド */
+        .header-flex { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 1rem; }
         .toolbar { display: flex; flex-grow: 1; gap: 10px; align-items: center; }
-        .toolbar input { margin-bottom: 0 !important; } /* Pico.cssのデフォルトマージンを消す */
-        .add-btn { white-space: nowrap; width: auto !important; margin-bottom: 0 !important; padding: 8px 20px; }
-
-        /* カードのデザイン */
-        article.card { cursor: pointer; padding: 1.5rem; margin-bottom: 1rem; background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: border-color 0.2s; }
-        article.card:hover { border-color: #3498db; }
-        .card-title { margin: 0 0 0.6rem 0; font-size: 1.2rem; font-weight: 700; color: #2c3e50; }
-        .card-body { color: #555; font-size: 0.95rem; margin-bottom: 1rem; line-height: 1.5; }
+        .toolbar input { margin-bottom: 0 !important; }
+        .add-btn { white-space: nowrap; width: auto !important; margin-bottom: 0 !important; background-color: #37352f; border: none; }
         
-        /* タグと著者 */
-        .tag { display: inline-block; padding: 2px 10px; margin-right: 6px; border-radius: 4px; font-size: 0.75rem; background: #eef2f6; color: #475569; font-weight: 500; }
-        .author-tag { font-size: 0.8rem; color: #999; margin-top: 0.5rem; display: block; }
+        .usage-guide { background: #fff; border: 1px solid #e5e5e1; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.8rem; }
 
-        /* モーダル（ウィンドウ）の拡大 */
-        dialog article { width: 90% !important; max-width: 900px !important; min-height: 400px; }
-        
-        /* 小さなボタン（編集・削除） */
-        .btn-sm { font-size: 0.8rem; padding: 5px 15px; width: auto; display: inline-block; margin-left: 10px; }
-        .hidden { display: none; }
-        pre { white-space: pre-wrap; background: #fdfdfd; padding: 1.5rem; border-radius: 8px; border: 1px solid #eee; font-size: 1.1rem; line-height: 1.6; }
-
-        /* タグ一覧用のスタイル */
+        /* タグ一覧（チップ）の調整 */
+        #tag-cloud { margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 8px; }
         .tag-chip {
             cursor: pointer;
-            padding: 4px 12px;
+            padding: 4px 14px; /* 横に少し広めに */
+            margin: 2px 0; /* 縦の隙間を確保 */
             border-radius: 20px;
-            font-size: 0.8rem;
-            background: #e0e0e0;
-            color: #666;
+            font-size: 0.75rem;
+            background: #ebebe9;
+            color: #5f5e5b;
             transition: all 0.2s;
-            border: 1px solid transparent;
         }
-        .tag-chip:hover {
-            background: #d0d0d0;
-        }
-        .tag-chip.active {
-            background: #3498db;
-            color: white;
-            box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+        .tag-chip.active { background: #37352f; color: #fff; }
+
+        /* 3カラムグリッド配置 */
+        #list { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); /* 縦3列 */
+            grid-gap: 12px; /* カード間の隙間を詰める */
         }
 
+        /* カードデザイン */
+        article.card { 
+            background: #fff;
+            border: 1px solid #e5e5e1;
+            padding: 1rem;
+            margin-bottom: 0; /* grid-gapで制御するため0に */
+            height: 100%; /* 高さを揃える */
+            display: flex;
+            flex-direction: column;
+        }
+        .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; line-height: 1.3; }
+        .card-body { font-size: 0.85rem; color: #666; flex-grow: 1; margin-bottom: 0.8rem; }
         
-        @media (max-width: 600px) {
+        .tag { 
+            padding: 1px 6px; 
+            margin: 0 4px 4px 0; 
+            font-size: 0.7rem; 
+            background: #f1f1ef; 
+            border: 1px solid #e5e5e1;
+        }
+        .author-tag { font-size: 0.7rem; color: #aaa; margin-top: auto; }
+
+        /* モーダル */
+        dialog article { width: 90% !important; max-width: 800px !important; }
+
+        .hidden {
+            display: none;
+        }
+
+        /* レスポンス対応 */
+        @media (max-width: 900px) { #list { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { 
+            #list { grid-template-columns: 1fr; }
             .header-flex { flex-direction: column; align-items: flex-start; }
             .toolbar { width: 100%; }
         }
     </style>
+
 </head>
 <body>
     <main class="container">
         <header>
             <div class="header-flex">
-                <h2>英語</h2>
-                <div class="toolbar-container">
-                    <div class="toolbar">
-                        <input type="text" id="search" placeholder="タイトル、本文、タグで検索..." oninput="render()">
-                        <button onclick="openModal('add')" class="add-btn">＋ 追加</button>
-                    </div>
-                    <div id="tag-cloud" style="margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 5px;"></div>
+                <h2>English DB</h2>
+                <div class="toolbar">
+                    <input type="text" id="search" placeholder="検索..." oninput="render()">
+                    <button onclick="openModal('add')" class="add-btn">＋ New Entry</button>
                 </div>
             </div>
+            
+            <details class="usage-guide">
+                <summary>利用ガイド（必ずお読みください）</summary>
+                <ul>
+                    <li><strong>閲覧：</strong> タイトル、本文、タグで検索・絞り込みが可能です。</li>
+                    <li><strong>投稿：</strong> 右上の「＋ New Entry」から追加できます。</li>
+                    <li><strong>編集・削除：</strong> 各データの詳細画面から行えます。投稿時に設定した「パスワード」が必要です。</li>
+                    <li><strong>注意：</strong> パスワードは再発行できません。忘れないように管理してください。</li>
+                </ul>
+            </details>
+
+            <div id="tag-cloud"></div>
         </header>
 
-        <div id="list">読み込み中...</div>
+        <div id="list">Loading...</div>
     </main>
 
     <dialog id="modal">
@@ -163,7 +197,8 @@
             const q = document.getElementById('search').value.toLowerCase();
             const list = document.getElementById('list');
             
-            const filtered = allData.filter(item => {
+            // 1. 検索とタグでフィルタリング
+            let filtered = allData.filter(item => {
                 const matchesSearch = item.Title.toLowerCase().includes(q) || 
                                     item.Body.toLowerCase().includes(q) || 
                                     item.Tags.toLowerCase().includes(q);
@@ -173,11 +208,15 @@
                 return matchesSearch && matchesTag;
             });
 
+            // 2. ★最新順にするために配列を逆順にする
+            filtered.reverse();
+
             if(filtered.length === 0) {
-                list.innerHTML = "<p>該当するデータが見つかりません。</p>";
+                list.innerHTML = "<p style='grid-column: 1/-1; text-align: center; padding: 2rem; color: #999;'>該当するデータが見つかりません。</p>";
                 return;
             }
 
+            // 3. HTMLを生成
             list.innerHTML = filtered.map(item => {
                 const shortBody = item.Body.length > 120 ? item.Body.substring(0, 120) + "..." : item.Body;
                 return `

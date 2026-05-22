@@ -3,53 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Learning DB</title>
+    <title>英語知識共有</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <style>
-        :root { --pico-font-size: 14px; --pico-border-radius: 8px; }
-        body { background-color: #f7f7f5; color: #37352f; }
-        .container { max-width: 800px; margin-top: 2rem; }
+        :root { --pico-font-size: 15px; --pico-border-radius: 8px; }
+        body { background-color: #f7f7f5; color: #37352f; font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif; }
+        .container { max-width: 1000px; margin-top: 2rem; }
         
+        /* ヘッダー周り：改行防止 */
+        header { margin-bottom: 2rem; }
+        .header-flex { display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: nowrap; }
+        .header-flex h2 { margin: 0; white-space: nowrap; }
+        .toolbar { display: flex; flex-grow: 1; gap: 10px; align-items: center; }
+        .toolbar input { margin-bottom: 0 !important; } /* Pico.cssのデフォルトマージンを消す */
+        .add-btn { white-space: nowrap; width: auto !important; margin-bottom: 0 !important; padding: 8px 20px; }
+
         /* カードのデザイン */
-        article.card { cursor: pointer; padding: 1.2rem; margin-bottom: 1rem; background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; }
+        article.card { cursor: pointer; padding: 1.5rem; margin-bottom: 1rem; background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: border-color 0.2s; }
         article.card:hover { border-color: #3498db; }
-        .card-title { margin: 0 0 0.5rem 0; font-weight: 700; color: #2c3e50; }
-        .card-body { color: #666; font-size: 0.9rem; margin-bottom: 0.8rem; line-height: 1.4; }
+        .card-title { margin: 0 0 0.6rem 0; font-size: 1.2rem; font-weight: 700; color: #2c3e50; }
+        .card-body { color: #555; font-size: 0.95rem; margin-bottom: 1rem; line-height: 1.5; }
         
-        /* 小さなボタン */
-        .btn-sm { font-size: 0.7rem; padding: 4px 10px; width: auto; display: inline-block; margin-right: 5px; }
+        /* タグと著者 */
+        .tag { display: inline-block; padding: 2px 10px; margin-right: 6px; border-radius: 4px; font-size: 0.75rem; background: #eef2f6; color: #475569; font-weight: 500; }
+        .author-tag { font-size: 0.8rem; color: #999; margin-top: 0.5rem; display: block; }
+
+        /* モーダル（ウィンドウ）の拡大 */
+        dialog article { width: 90% !important; max-width: 900px !important; min-height: 400px; }
         
-        .tag { display: inline-block; padding: 2px 8px; margin-right: 5px; border-radius: 4px; font-size: 0.7rem; background: #f1f1f0; color: #444; }
+        /* 小さなボタン（編集・削除） */
+        .btn-sm { font-size: 0.8rem; padding: 5px 15px; width: auto; display: inline-block; margin-left: 10px; }
         .hidden { display: none; }
-        .toolbar { display: flex; gap: 10px; margin-bottom: 2rem; }
-        pre { white-space: pre-wrap; background: #f9f9f9; padding: 1rem; border-radius: 8px; border: 1px solid #eee; }
+        pre { white-space: pre-wrap; background: #fdfdfd; padding: 1.5rem; border-radius: 8px; border: 1px solid #eee; font-size: 1.1rem; line-height: 1.6; }
+
+        /* タグ一覧用のスタイル */
+        .tag-chip {
+            cursor: pointer;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            background: #e0e0e0;
+            color: #666;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .tag-chip:hover {
+            background: #d0d0d0;
+        }
+        .tag-chip.active {
+            background: #3498db;
+            color: white;
+            box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+        }
+
+        
+        @media (max-width: 600px) {
+            .header-flex { flex-direction: column; align-items: flex-start; }
+            .toolbar { width: 100%; }
+        }
     </style>
 </head>
 <body>
     <main class="container">
         <header>
-            <h2 style="margin-bottom: 1.5rem;">English Learning DB</h2>
-            <div class="toolbar">
-                <input type="text" id="search" placeholder="検索..." oninput="render()">
-                <button onclick="openModal('add')" style="width: auto;">＋ 追加</button>
+            <div class="header-flex">
+                <h2>英語</h2>
+                <div class="toolbar-container">
+                    <div class="toolbar">
+                        <input type="text" id="search" placeholder="タイトル、本文、タグで検索..." oninput="render()">
+                        <button onclick="openModal('add')" class="add-btn">＋ 追加</button>
+                    </div>
+                    <div id="tag-cloud" style="margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 5px;"></div>
+                </div>
             </div>
         </header>
 
-        <div id="list">Loading...</div>
+        <div id="list">読み込み中...</div>
     </main>
 
     <dialog id="modal">
         <article>
             <header>
                 <a href="#close" aria-label="Close" class="close" onclick="closeModal()"></a>
-                <strong id="modalTitle">詳細</strong>
+                <strong id="modalTitle" style="font-size: 1.4rem;">詳細</strong>
             </header>
             
             <div id="viewMode">
-                <p id="viewAuthor" style="font-size: 0.75rem; color: #999; margin-bottom: 0.5rem;"></p>
+                <p id="viewAuthor" style="font-size: 0.85rem; color: #999; margin-bottom: 0.8rem;"></p>
                 <pre id="viewBody"></pre>
-                <div id="viewTags" style="margin-bottom: 1rem;"></div>
-                <footer style="text-align: right; padding-top: 1rem; border-top: 1px solid #eee;">
+                <div id="viewTags" style="margin-top: 1rem;"></div>
+                <footer style="text-align: right; padding-top: 1.5rem; border-top: 1px solid #eee; margin-top: 2rem;">
                     <button class="secondary outline btn-sm" onclick="switchMode('edit')">編集</button>
                     <button class="contrast outline btn-sm" onclick="switchMode('delete')">削除</button>
                 </footer>
@@ -58,23 +101,98 @@
             <div id="editMode" class="hidden">
                 <form id="dataForm">
                     <input type="hidden" id="f-id">
-                    <label>タイトル<input type="text" id="f-title" required></label>
-                    <label>本文<textarea id="f-body" rows="6" required></textarea></label>
-                    <label>タグ<input type="text" id="f-tags" placeholder="grammar, phrase"></label>
-                    <label id="authorLabel">作成者名<input type="text" id="f-author"></label>
-                    <label>パスワード<input type="password" id="f-pass" required placeholder="本人確認用"></label>
-                    <button type="button" id="submitBtn" onclick="saveData()">データを送信</button>
+                    <div class="grid">
+                        <label>タイトル<input type="text" id="f-title" placeholder="例: 前置詞at" required></label>
+                        <label id="authorLabel">作成者名<input type="text" id="f-author" placeholder="あなたの名前"></label>
+                    </div>
+                    <label>本文<textarea id="f-body" rows="8" required placeholder="ここに詳しく記入してください..."></textarea></label>
+                    <div class="grid">
+                        <label>タグ(半角カンマ区切り) <input type="text" id="f-tags" placeholder="文法, 単語, フレーズ"></label>
+                        <label>編集パスワード（必須）<input type="password" id="f-pass" required placeholder="本人確認用"></label>
+                    </div>
+                    <button type="button" id="submitBtn" onclick="saveData()" style="margin-top: 1rem;">データを保存する</button>
                 </form>
             </div>
         </article>
     </dialog>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbza9-5IolyrUWc1PzqwADb9NpRo_Kb7WghNsvSz4jtZFCJt-H05SLswXf2Wa05jjZNx/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbza9-5IolyrUWc1PzqwADb9NpRo_Kb7WghNsvSz4jtZFCJt-H05SLswXf2Wa05jjZNx/exec";
         let allData = [];
         let currentItem = null;
+        let selectedTag = null; // 現在選択されているタグを保持
 
-        // パスワードをハッシュ化する関数 (SHA-256)
+        async function fetchData() {
+            try {
+                const res = await fetch(GAS_URL);
+                allData = await res.json();
+                renderTagCloud(); // タグ一覧を生成
+                render();
+            } catch (e) {
+                document.getElementById('list').innerText = "データの取得に失敗しました。";
+            }
+        }
+
+        // タグ一覧を表示する関数
+        function renderTagCloud() {
+            const tagCloud = document.getElementById('tag-cloud');
+            // 全データからタグを抽出してユニークなリストを作成
+            const allTags = allData.flatMap(item => 
+                item.Tags ? item.Tags.split(',').map(t => t.trim()) : []
+            ).filter(t => t !== "");
+            
+            const uniqueTags = [...new Set(allTags)].sort();
+
+            tagCloud.innerHTML = `
+                <span class="tag-chip ${selectedTag === null ? 'active' : ''}" 
+                    onclick="filterByTag(null)">All</span>
+                ${uniqueTags.map(tag => `
+                    <span class="tag-chip ${selectedTag === tag ? 'active' : ''}" 
+                        onclick="filterByTag('${tag}')">${tag}</span>
+                `).join('')}
+            `;
+        }
+
+        function filterByTag(tag) {
+            selectedTag = tag;
+            renderTagCloud(); // ボタンの見た目を更新
+            render(); // リストを更新
+        }
+
+        function render() {
+            const q = document.getElementById('search').value.toLowerCase();
+            const list = document.getElementById('list');
+            
+            const filtered = allData.filter(item => {
+                const matchesSearch = item.Title.toLowerCase().includes(q) || 
+                                    item.Body.toLowerCase().includes(q) || 
+                                    item.Tags.toLowerCase().includes(q);
+                const matchesTag = selectedTag === null || 
+                                (item.Tags && item.Tags.split(',').map(t => t.trim()).includes(selectedTag));
+                
+                return matchesSearch && matchesTag;
+            });
+
+            if(filtered.length === 0) {
+                list.innerHTML = "<p>該当するデータが見つかりません。</p>";
+                return;
+            }
+
+            list.innerHTML = filtered.map(item => {
+                const shortBody = item.Body.length > 120 ? item.Body.substring(0, 120) + "..." : item.Body;
+                return `
+                <article class="card" onclick="showDetail('${item.ID}')">
+                    <div class="card-title">${item.Title}</div>
+                    <div class="card-body">${shortBody}</div>
+                    <div>
+                        ${item.Tags.split(',').filter(t => t.trim()).map(t => `<span class="tag">${t.trim()}</span>`).join('')}
+                    </div>
+                    <span class="author-tag">By ${item.Author}</span>
+                </article>
+            `}).join('');
+        }
+
+
         async function hashPassword(password) {
             const encoder = new TextEncoder();
             const data = encoder.encode(password);
@@ -82,77 +200,91 @@
             return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        async function fetchData() {
-            const res = await fetch(GAS_URL);
-            allData = await res.json();
-            render();
-        }
-
-        function render() {
-            const q = document.getElementById('search').value.toLowerCase();
-            const list = document.getElementById('list');
-            const filtered = allData.filter(item => 
-                item.Title.toLowerCase().includes(q) || item.Body.toLowerCase().includes(q) || item.Tags.toLowerCase().includes(q)
-            );
-
-            list.innerHTML = filtered.map(item => {
-                // 本文を100文字で省略
-                const shortBody = item.Body.length > 100 ? item.Body.substring(0, 100) + "..." : item.Body;
-                return `
-                <article class="card" onclick="showDetail('${item.ID}')">
-                    <div class="card-title">${item.Title}</div>
-                    <div class="card-body">${shortBody}</div>
-                    <div>${item.Tags.split(',').filter(t => t.trim()).map(t => `<span class="tag">${t.trim()}</span>`).join('')}</div>
-                </article>
-            `}).join('');
-        }
-
         function showDetail(id) {
             currentItem = allData.find(item => item.ID == id);
             document.getElementById('modalTitle').innerText = currentItem.Title;
             document.getElementById('viewBody').innerText = currentItem.Body;
-            document.getElementById('viewAuthor').innerText = "By " + currentItem.Author;
+            document.getElementById('viewAuthor').innerText = "作成者: " + currentItem.Author;
             document.getElementById('viewTags').innerHTML = currentItem.Tags.split(',').filter(t => t.trim()).map(t => `<span class="tag">${t.trim()}</span>`).join('');
             switchMode('view');
             document.getElementById('modal').showModal();
         }
 
-        function openModal(mode) {
+        function openModal() {
             currentItem = null;
             document.getElementById('dataForm').reset();
             document.getElementById('f-id').value = "";
-            document.getElementById('modalTitle').innerText = "新規作成";
+            document.getElementById('modalTitle').innerText = "新規データの追加";
             switchMode('edit');
-            document.getElementById('authorLabel').classList.remove('hidden');
+            document.getElementById('authorLabel').style.display = "block";
             document.getElementById('modal').showModal();
         }
 
         function switchMode(mode) {
             const isEdit = mode === 'edit' || mode === 'delete';
+            const isDelete = mode === 'delete';
+            
             document.getElementById('viewMode').classList.toggle('hidden', isEdit);
             document.getElementById('editMode').classList.toggle('hidden', !isEdit);
             
-            if(mode === 'edit' && currentItem) {
+            // フォーム要素の取得
+            const fTitle = document.getElementById('f-title');
+            const fBody = document.getElementById('f-body');
+            const fTags = document.getElementById('f-tags');
+            const fAuthorLabel = document.getElementById('authorLabel');
+
+            if(isEdit && currentItem) {
                 document.getElementById('f-id').value = currentItem.ID;
-                document.getElementById('f-title').value = currentItem.Title;
-                document.getElementById('f-body').value = currentItem.Body;
-                document.getElementById('f-tags').value = currentItem.Tags;
-                document.getElementById('authorLabel').classList.add('hidden');
-                document.getElementById('submitBtn').innerText = "更新する";
-            } else if(mode === 'delete') {
-                document.getElementById('modalTitle').innerText = "削除の確認";
-                document.getElementById('submitBtn').innerText = "確認パスワードを入力して削除";
+                fTitle.value = currentItem.Title;
+                fBody.value = currentItem.Body;
+                fTags.value = currentItem.Tags;
+                
+                // 削除モードなら編集不可（フォーカス無効）にする
+                fTitle.readOnly = isDelete;
+                fBody.readOnly = isDelete;
+                fTags.readOnly = isDelete;
+                fAuthorLabel.style.display = "none";
+
+                if (isDelete) {
+                    document.getElementById('modalTitle').innerText = "データの削除";
+                    document.getElementById('submitBtn').innerText = "パスワードを確認して削除する";
+                    document.getElementById('submitBtn').className = "contrast"; // ボタン色を削除用に
+                } else {
+                    document.getElementById('modalTitle').innerText = "データの編集";
+                    document.getElementById('submitBtn').innerText = "更新を保存する";
+                    document.getElementById('submitBtn').className = ""; // 通常色
+                }
+            } else {
+                // 新規追加モード
+                fTitle.readOnly = false;
+                fBody.readOnly = false;
+                fTags.readOnly = false;
+                document.getElementById('modalTitle').innerText = "新規データの追加";
+                fAuthorLabel.style.display = "block";
+                document.getElementById('submitBtn').innerText = "データを保存する";
+                document.getElementById('submitBtn').className = "";
             }
         }
 
         async function saveData() {
             const btn = document.getElementById('submitBtn');
-            const mode = document.getElementById('f-id').value ? (document.getElementById('modalTitle').innerText.includes("削除") ? "delete" : "edit") : "add";
+            const isDelete = document.getElementById('modalTitle').innerText.includes("削除");
+            const mode = document.getElementById('f-id').value ? (isDelete ? "delete" : "edit") : "add";
             const rawPassword = document.getElementById('f-pass').value;
 
-            if(!rawPassword) return alert("パスワードを入力してください");
+            if(!rawPassword) {
+                alert("本人確認のためパスワードを入力してください");
+                return;
+            }
 
-            // 送信前にハッシュ化
+            // 削除時はタイトル・本文の空チェックをスルー
+            if (!isDelete) {
+                if(!document.getElementById('f-title').value || !document.getElementById('f-body').value) {
+                    alert("タイトルと本文を入力してください");
+                    return;
+                }
+            }
+
             const hashedPassword = await hashPassword(rawPassword);
             
             const payload = {
@@ -166,20 +298,30 @@
             };
 
             btn.disabled = true;
+            const originalText = btn.innerText;
             btn.innerText = "処理中...";
 
-            const res = await fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) });
-            const result = await res.text();
+            try {
+                const res = await fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) });
+                const result = await res.text();
 
-            if (result === "Success") {
-                closeModal();
-                fetchData();
-            } else {
-                alert("認証失敗: " + result);
+                if (result === "Success") {
+                    alert(isDelete ? "削除が完了しました" : "保存が完了しました");
+                    closeModal();
+                    await fetchData(); // データを再読込
+                } else {
+                    alert("認証エラー: パスワードが正しくないか、既にデータが削除されています (" + result + ")");
+                    btn.disabled = false;
+                    btn.innerText = originalText;
+                }
+            } catch (e) {
+                alert("通信エラーが発生しました");
                 btn.disabled = false;
-                btn.innerText = "再試行";
+                btn.innerText = originalText;
             }
         }
+
+
 
         function closeModal() { document.getElementById('modal').close(); }
         fetchData();

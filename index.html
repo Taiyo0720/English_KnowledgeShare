@@ -773,6 +773,162 @@
                 transform:scale(1.1);
             }
         }
+
+        /* =========================
+            ダークモード補正
+        ========================= */
+        @media (prefers-color-scheme: dark){
+
+            :root{
+
+                --pico-background-color:#1f1f1c;
+                --pico-color:#eceae4;
+                --pico-primary:#d4d0c8;
+            }
+
+            html,
+            body{
+
+                background:#1f1f1c !important;
+                color:#eceae4 !important;
+            }
+
+            /* ヘッダー */
+
+            .header-flex h2{
+                color:#f3f1eb;
+            }
+
+            /* ガイド */
+
+            .usage-guide{
+
+                background:#2a2a27;
+
+                border-color:#3a3a36;
+
+                color:#ddd;
+            }
+
+            /* 検索欄 */
+
+            input,
+            textarea{
+
+                background:#2b2b28 !important;
+
+                color:#f1efe9 !important;
+
+                border:1px solid #454540 !important;
+            }
+
+            input::placeholder,
+            textarea::placeholder{
+                color:#aaa !important;
+            }
+
+            /* タグ */
+
+            .tag-chip{
+
+                background:#343430;
+
+                color:#ddd;
+            }
+
+            .tag-chip.active{
+
+                background:#e8e4dc;
+
+                color:#222;
+            }
+
+            /* カード */
+
+            article.card{
+
+                background:#2a2a27;
+
+                border-color:#3a3a36;
+
+                color:#f0eee8;
+            }
+
+            .card-title{
+                color:#f5f3ed;
+            }
+
+            .card-body{
+                color:#c8c6bf;
+            }
+
+            .author-tag{
+                color:#9f9d96;
+            }
+
+            /* タグ */
+
+            .tag{
+
+                background:#383834;
+
+                border-color:#4a4a45;
+
+                color:#ddd;
+            }
+
+            .protect-tag{
+
+                background:#4a3d42;
+
+                color:#f2d7de;
+            }
+
+            .open-tag{
+
+                background:#33463a;
+
+                color:#cfe8d4;
+            }
+
+            /* モーダル */
+
+            dialog article{
+
+                background:#242421;
+
+                color:#eee;
+            }
+
+            #viewBody{
+
+                background:#2c2c28;
+
+                border-color:#3b3b37;
+
+                color:#eceae3;
+            }
+
+            /* ボタン */
+
+            .add-btn{
+
+                background:#d9d4ca !important;
+
+                color:#222 !important;
+            }
+
+            button.secondary{
+
+                border-color:#666 !important;
+            }
+
+            /* closeボタン */
+
+            .close{
+                filter:invert(1);
+            }
+        }
     </style>
 
 </head>

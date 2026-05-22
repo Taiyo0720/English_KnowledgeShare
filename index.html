@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>英語知識共有</title>
+    <title>Eigo!知恵袋</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <style>
         :root { 
@@ -15,75 +15,425 @@
         }
 
         body { 
-            background-color: #f7f7f5; 
-            color: #37352f; 
+            background-color: #f3f2ee;
+            color: #37352f;
             font-family: "Inter", "Segoe UI", sans-serif;
         }
 
-        /* ヘッダー・検索・ガイド */
-        .header-flex { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 1rem; }
-        .toolbar { display: flex; flex-grow: 1; gap: 10px; align-items: center; }
-        .toolbar input { margin-bottom: 0 !important; }
-        .add-btn { white-space: nowrap; width: auto !important; margin-bottom: 0 !important; background-color: #37352f; border: none; }
-        
-        .usage-guide { background: #fff; border: 1px solid #e5e5e1; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.8rem; }
+        /* ===== ヘッダー ===== */
 
-        /* タグ一覧（チップ）の調整 */
-        #tag-cloud { margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 8px; }
-        .tag-chip {
-            cursor: pointer;
-            padding: 4px 14px; /* 横に少し広めに */
-            margin: 2px 0; /* 縦の隙間を確保 */
-            border-radius: 20px;
-            font-size: 0.75rem;
-            background: #ebebe9;
-            color: #5f5e5b;
-            transition: all 0.2s;
-        }
-        .tag-chip.active { background: #37352f; color: #fff; }
-
-        /* 3カラムグリッド配置 */
-        #list { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); /* 縦3列 */
-            grid-gap: 12px; /* カード間の隙間を詰める */
+        .header-flex{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:15px;
+            margin-bottom:1rem;
         }
 
-        /* カードデザイン */
-        article.card { 
-            background: #fff;
-            border: 1px solid #e5e5e1;
-            padding: 1rem;
-            margin-bottom: 0; /* grid-gapで制御するため0に */
-            height: 100%; /* 高さを揃える */
-            display: flex;
-            flex-direction: column;
-        }
-        .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; line-height: 1.3; }
-        .card-body { font-size: 0.85rem; color: #666; flex-grow: 1; margin-bottom: 0.8rem; }
-        
-        .tag { 
-            padding: 1px 6px; 
-            margin: 0 4px 4px 0; 
-            font-size: 0.7rem; 
-            background: #f1f1ef; 
-            border: 1px solid #e5e5e1;
-        }
-        .author-tag { font-size: 0.7rem; color: #aaa; margin-top: auto; }
-
-        /* モーダル */
-        dialog article { width: 90% !important; max-width: 800px !important; }
-
-        .hidden {
-            display: none;
+        .toolbar{
+            display:flex;
+            flex-grow:1;
+            gap:10px;
+            align-items:center;
         }
 
-        /* レスポンス対応 */
-        @media (max-width: 900px) { #list { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 600px) { 
-            #list { grid-template-columns: 1fr; }
-            .header-flex { flex-direction: column; align-items: flex-start; }
-            .toolbar { width: 100%; }
+        .toolbar input{
+            margin-bottom:0 !important;
+        }
+
+        .add-btn{
+            white-space:nowrap;
+            width:auto !important;
+            margin-bottom:0 !important;
+
+            background-color:#37352f;
+            border:none;
+        }
+
+        /* ===== 利用ガイド ===== */
+
+        .usage-guide{
+            background:#fbfbf9;
+
+            border:1px solid #dfddd7;
+
+            padding:0.9rem 1rem;
+
+            border-radius:12px;
+
+            margin-bottom:1rem;
+
+            font-size:0.8rem;
+        }
+
+        /* ===== タグ一覧 ===== */
+
+        #tag-cloud{
+            margin-bottom:1.5rem;
+
+            display:flex;
+            flex-wrap:wrap;
+            gap:8px;
+        }
+
+        .tag-chip{
+            cursor:pointer;
+
+            padding:4px 14px;
+
+            margin:2px 0;
+
+            border-radius:999px;
+
+            font-size:0.75rem;
+
+            background:#e4e1da;
+
+            color:#5f5b53;
+
+            transition:all 0.2s;
+        }
+
+        .tag-chip:hover{
+            background:#d8d4cb;
+        }
+
+        .tag-chip.active{
+            background:#37352f;
+            color:#fff;
+        }
+
+        /* ===== 投稿一覧 ===== */
+
+        #list{
+            display:grid;
+
+            grid-template-columns:repeat(3, 1fr);
+
+            gap:14px;
+        }
+
+        /* ===== カード ===== */
+
+        article.card{
+            background:#fbfbf9;
+
+            border:1px solid #dfddd7;
+
+            border-radius:14px;
+
+            padding:1rem;
+
+            margin-bottom:0;
+
+            height:100%;
+
+            display:flex;
+            flex-direction:column;
+
+            cursor:pointer;
+
+            transition:
+                transform 0.15s ease,
+                box-shadow 0.15s ease,
+                border-color 0.15s ease;
+        }
+
+        article.card:hover{
+            transform:translateY(-2px);
+
+            border-color:#cfcabf;
+
+            box-shadow:
+                0 10px 24px rgba(0,0,0,0.06);
+        }
+
+        .card-title{
+            font-size:1rem;
+
+            font-weight:700;
+
+            margin-bottom:0.5rem;
+
+            line-height:1.4;
+
+            color:#2f2d29;
+        }
+
+        .card-body{
+            font-size:0.86rem;
+
+            color:#6a675f;
+
+            line-height:1.7;
+
+            flex-grow:1;
+
+            margin-bottom:0.9rem;
+        }
+
+        /* ===== タグ ===== */
+
+        .tag{
+            display:inline-block;
+
+            padding:3px 10px;
+
+            margin:0 6px 6px 0;
+
+            font-size:0.7rem;
+
+            border-radius:999px;
+
+            background:#e3e0d7;
+
+            color:#5b574f;
+
+            border:none;
+        }
+
+        /* ===== 投稿者 ===== */
+
+        .author-tag{
+            font-size:0.72rem;
+
+            color:#9b978e;
+
+            margin-top:auto;
+        }
+
+        /* ===== モーダル ===== */
+
+        dialog{
+            padding:0;
+            border:none;
+            background:transparent;
+        }
+
+        dialog::backdrop{
+            background:rgba(20,20,20,0.58);
+            backdrop-filter:blur(4px);
+        }
+
+        dialog article{
+            width:min(92vw, 820px) !important;
+
+            max-height:88vh;
+
+            overflow:hidden;
+
+            padding:0;
+
+            border:none;
+
+            border-radius:20px;
+
+            background:#f5f3ee;
+
+            box-shadow:
+                0 24px 70px rgba(0,0,0,0.22);
+        }
+
+        /* ===== モーダルヘッダー ===== */
+
+        dialog header{
+            padding:1.3rem 1.5rem 0.9rem;
+
+            margin:0;
+
+            border-bottom:1px solid #ddd8ce;
+
+            background:#ebe7de;
+        }
+
+        #modalTitle{
+            font-size:1.65rem !important;
+
+            font-weight:800;
+
+            line-height:1.35;
+
+            color:#2e2c28;
+
+            margin-right:40px;
+        }
+
+        /* ===== 本文エリア ===== */
+
+        #viewMode,
+        #editMode{
+            padding:1.4rem 1.5rem 1.5rem;
+
+            max-height:calc(88vh - 92px);
+
+            overflow:auto;
+        }
+
+        /* ===== 作成者 ===== */
+
+        #viewAuthor{
+            font-size:0.78rem !important;
+
+            color:#8d887d !important;
+
+            margin-bottom:1rem !important;
+
+            letter-spacing:0.03em;
+        }
+
+        /* ===== 本文 ===== */
+
+        #viewBody{
+            background:#ece8df;
+
+            border:1px solid #ddd7cc;
+
+            border-radius:14px;
+
+            padding:1.3rem;
+
+            margin:0;
+
+            font-size:1rem;
+
+            line-height:1.95;
+
+            color:#2f2d29;
+
+            white-space:pre-wrap;
+
+            word-break:break-word;
+
+            overflow:auto;
+        }
+
+        /* ===== タグ表示 ===== */
+
+        #viewTags{
+            margin-top:1rem;
+        }
+
+        /* ===== フッター ===== */
+
+        #viewMode footer{
+            display:flex;
+
+            justify-content:flex-end;
+
+            gap:8px;
+
+            margin-top:1.5rem;
+
+            padding-top:1rem;
+
+            border-top:1px solid #ddd8ce;
+        }
+
+        /* ===== 小ボタン ===== */
+
+        .btn-sm{
+            width:auto !important;
+
+            min-width:unset !important;
+
+            margin:0 !important;
+
+            padding:0.33rem 0.78rem !important;
+
+            font-size:0.72rem !important;
+
+            font-weight:600;
+
+            border-radius:8px !important;
+        }
+
+        .secondary.outline.btn-sm{
+            border-color:#9d9688;
+            color:#5e584f;
+        }
+
+        .contrast.outline.btn-sm{
+            border-color:#8f6f6f;
+            color:#7a4f4f;
+        }
+
+        /* ===== フォーム ===== */
+
+        #editMode input,
+        #editMode textarea{
+            background:#faf9f6;
+
+            border-color:#d8d2c6;
+        }
+
+        #editMode textarea{
+            min-height:240px;
+
+            resize:vertical;
+        }
+
+        /* ===== hidden ===== */
+
+        .hidden{
+            display:none;
+        }
+
+        .protect-tag{
+            background:#ddd6d6;
+            color:#6d4d4d;
+        }
+
+        .open-tag{
+            background:#d8e4da;
+            color:#46624b;
+        }
+
+        /* ===== レスポンシブ ===== */
+
+        @media (max-width:900px){
+
+            #list{
+                grid-template-columns:repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width:600px){
+
+            #list{
+                grid-template-columns:1fr;
+            }
+
+            .header-flex{
+                flex-direction:column;
+                align-items:flex-start;
+            }
+
+            .toolbar{
+                width:100%;
+            }
+
+            dialog article{
+                width:96vw !important;
+
+                max-height:92vh;
+
+                border-radius:16px;
+            }
+
+            #viewMode,
+            #editMode{
+                padding:1rem;
+            }
+
+            #modalTitle{
+                font-size:1.3rem !important;
+            }
+
+            #viewBody{
+                font-size:0.95rem;
+
+                line-height:1.8;
+            }
         }
     </style>
 
@@ -92,19 +442,19 @@
     <main class="container">
         <header>
             <div class="header-flex">
-                <h2>English DB</h2>
+                <h2>Eigo!知恵袋</h2>
                 <div class="toolbar">
                     <input type="text" id="search" placeholder="検索..." oninput="render()">
-                    <button onclick="openModal('add')" class="add-btn">＋ New Entry</button>
+                    <button onclick="openModal('add')" class="add-btn">＋ 追加</button>
                 </div>
             </div>
             
             <details class="usage-guide">
-                <summary>利用ガイド（必ずお読みください）</summary>
+                <summary>利用ガイド</summary>
                 <ul>
                     <li><strong>閲覧：</strong> タイトル、本文、タグで検索・絞り込みが可能です。</li>
-                    <li><strong>投稿：</strong> 右上の「＋ New Entry」から追加できます。</li>
-                    <li><strong>編集・削除：</strong> 各データの詳細画面から行えます。投稿時に設定した「パスワード」が必要です。</li>
+                    <li><strong>投稿：</strong> 右上の「＋ 追加」から追加できます。パスワードは他の人に編集されたくない投稿に設定してください。出典はなるべく書きましょう。</li>
+                    <li><strong>編集・削除：</strong> 各データの詳細画面から行えます。「🔒️保護済み」のものは投稿時に設定したパスワードが必要です。</li>
                     <li><strong>注意：</strong> パスワードは再発行できません。忘れないように管理してください。</li>
                 </ul>
             </details>
@@ -117,9 +467,9 @@
 
     <dialog id="modal">
         <article>
-            <header>
+            <header style="margin-bottom:1rem;">
                 <a href="#close" aria-label="Close" class="close" onclick="closeModal()"></a>
-                <strong id="modalTitle" style="font-size: 1.4rem;">詳細</strong>
+                <div id="modalTitle">詳細</div>
             </header>
             
             <div id="viewMode">
@@ -137,12 +487,19 @@
                     <input type="hidden" id="f-id">
                     <div class="grid">
                         <label>タイトル<input type="text" id="f-title" placeholder="例: 前置詞at" required></label>
-                        <label id="authorLabel">作成者名<input type="text" id="f-author" placeholder="あなたの名前"></label>
+                        <label id="authorLabel">作成者名（任意）<input type="text" id="f-author" placeholder="あなたの名前"></label>
                     </div>
                     <label>本文<textarea id="f-body" rows="8" required placeholder="ここに詳しく記入してください..."></textarea></label>
                     <div class="grid">
                         <label>タグ(半角カンマ区切り) <input type="text" id="f-tags" placeholder="文法, 単語, フレーズ"></label>
-                        <label>編集パスワード（必須）<input type="password" id="f-pass" required placeholder="本人確認用"></label>
+                        <label id="passwordLabel">
+                            編集パスワード
+                            <input
+                                type="password"
+                                id="f-pass"
+                                placeholder="本人確認用">
+                            <small id="passwordHint"></small>
+                        </label>
                     </div>
                     <button type="button" id="submitBtn" onclick="saveData()" style="margin-top: 1rem;">データを保存する</button>
                 </form>
@@ -155,12 +512,20 @@
         let allData = [];
         let currentItem = null;
         let selectedTag = null; // 現在選択されているタグを保持
+        let currentMode = "view";
 
         async function fetchData() {
             try {
                 const res = await fetch(GAS_URL);
                 allData = await res.json();
-                renderTagCloud(); // タグ一覧を生成
+
+                // IDを強制的に文字列化
+                allData = allData.map(item => ({
+                    ...item,
+                    ID: String(item.ID)
+                }));
+
+                renderTagCloud();
                 render();
             } catch (e) {
                 document.getElementById('list').innerText = "データの取得に失敗しました。";
@@ -193,6 +558,41 @@
             render(); // リストを更新
         }
 
+        function showDetail(id) {
+            const targetId = String(id);
+
+            currentItem = allData.find(item => item.ID === targetId);
+
+            if (!currentItem) {
+                console.error("Data not found for ID:", targetId);
+                return;
+            }
+
+            document.getElementById('modalTitle').innerText = currentItem.Title;
+            document.getElementById('viewBody').innerText = currentItem.Body;
+            document.getElementById('viewAuthor').innerText =
+                "作成者: " + currentItem.Author;
+
+            document.getElementById('viewTags').innerHTML =
+
+                (currentItem.isProtected
+                    ? '<span class="tag protect-tag">🔒 保護済み</span>'
+                    : '<span class="tag open-tag">🌐 共同編集可</span>'
+                )
+
+                +
+
+                currentItem.Tags
+                    .split(',')
+                    .filter(t => t.trim())
+                    .map(t => `<span class="tag">${t.trim()}</span>`)
+                    .join('');
+
+            switchMode('view');
+            document.getElementById('modal').showModal();
+        }
+
+
         function render() {
             const q = document.getElementById('search').value.toLowerCase();
             const list = document.getElementById('list');
@@ -209,7 +609,7 @@
             });
 
             // 2. ★最新順にするために配列を逆順にする
-            filtered.reverse();
+            filtered = [...filtered].reverse();
 
             if(filtered.length === 0) {
                 list.innerHTML = "<p style='grid-column: 1/-1; text-align: center; padding: 2rem; color: #999;'>該当するデータが見つかりません。</p>";
@@ -219,12 +619,25 @@
             // 3. HTMLを生成
             list.innerHTML = filtered.map(item => {
                 const shortBody = item.Body.length > 120 ? item.Body.substring(0, 120) + "..." : item.Body;
+                // item.ID を確実にシングルクォートで囲って渡す
                 return `
                 <article class="card" onclick="showDetail('${item.ID}')">
                     <div class="card-title">${item.Title}</div>
                     <div class="card-body">${shortBody}</div>
                     <div>
-                        ${item.Tags.split(',').filter(t => t.trim()).map(t => `<span class="tag">${t.trim()}</span>`).join('')}
+
+                        ${item.isProtected
+                            ? '<span class="tag protect-tag">🔒 保護済み</span>'
+                            : '<span class="tag open-tag">🌐 共同編集可</span>'
+                        }
+
+                        ${item.Tags
+                            .split(',')
+                            .filter(t => t.trim())
+                            .map(t => `<span class="tag">${t.trim()}</span>`)
+                            .join('')
+                        }
+
                     </div>
                     <span class="author-tag">By ${item.Author}</span>
                 </article>
@@ -239,82 +652,137 @@
             return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        function showDetail(id) {
-            currentItem = allData.find(item => item.ID == id);
-            document.getElementById('modalTitle').innerText = currentItem.Title;
-            document.getElementById('viewBody').innerText = currentItem.Body;
-            document.getElementById('viewAuthor').innerText = "作成者: " + currentItem.Author;
-            document.getElementById('viewTags').innerHTML = currentItem.Tags.split(',').filter(t => t.trim()).map(t => `<span class="tag">${t.trim()}</span>`).join('');
-            switchMode('view');
-            document.getElementById('modal').showModal();
-        }
-
         function openModal() {
             currentItem = null;
             document.getElementById('dataForm').reset();
             document.getElementById('f-id').value = "";
-            document.getElementById('modalTitle').innerText = "新規データの追加";
+            //document.getElementById('modalTitle').innerText = "新規データの追加";
             switchMode('edit');
             document.getElementById('authorLabel').style.display = "block";
             document.getElementById('modal').showModal();
         }
 
         function switchMode(mode) {
+
+            currentMode = mode;
+
             const isEdit = mode === 'edit' || mode === 'delete';
             const isDelete = mode === 'delete';
-            
-            document.getElementById('viewMode').classList.toggle('hidden', isEdit);
-            document.getElementById('editMode').classList.toggle('hidden', !isEdit);
-            
-            // フォーム要素の取得
+
+            document.getElementById('viewMode')
+                .classList.toggle('hidden', isEdit);
+
+            document.getElementById('editMode')
+                .classList.toggle('hidden', !isEdit);
+
             const fTitle = document.getElementById('f-title');
             const fBody = document.getElementById('f-body');
             const fTags = document.getElementById('f-tags');
             const fAuthorLabel = document.getElementById('authorLabel');
+            const fPass = document.getElementById('f-pass');
+            const passwordHint = document.getElementById('passwordHint');
 
-            if(isEdit && currentItem) {
+            document.getElementById('f-pass').value = "";
+
+            if(isEdit && currentItem){
+
                 document.getElementById('f-id').value = currentItem.ID;
+
                 fTitle.value = currentItem.Title;
                 fBody.value = currentItem.Body;
                 fTags.value = currentItem.Tags;
-                
-                // 削除モードなら編集不可（フォーカス無効）にする
+
                 fTitle.readOnly = isDelete;
                 fBody.readOnly = isDelete;
                 fTags.readOnly = isDelete;
+
                 fAuthorLabel.style.display = "none";
 
-                if (isDelete) {
-                    document.getElementById('modalTitle').innerText = "データの削除";
-                    document.getElementById('submitBtn').innerText = "パスワードを確認して削除する";
-                    document.getElementById('submitBtn').className = "contrast"; // ボタン色を削除用に
-                } else {
-                    document.getElementById('modalTitle').innerText = "データの編集";
-                    document.getElementById('submitBtn').innerText = "更新を保存する";
-                    document.getElementById('submitBtn').className = ""; // 通常色
+                if(currentItem.isProtected){
+
+                    fPass.disabled = false;
+
+                    fPass.placeholder = "本人確認用";
+
+                    passwordHint.innerText =
+                        "この投稿の編集・削除にはパスワードが必要です。";
+
+                }else{
+
+                    fPass.disabled = true;
+
+                    fPass.value = "";
+
+                    fPass.placeholder = "不要";
+
+                    passwordHint.innerText =
+                        "この投稿は共同編集可能です。パスワードは不要です。";
                 }
-            } else {
-                // 新規追加モード
+
+                if(isDelete){
+
+                    document.getElementById('modalTitle').innerText = "データの削除";
+
+                    document.getElementById('submitBtn').innerText =
+                        "パスワードを確認して削除する";
+
+                    document.getElementById('submitBtn').className =
+                        "contrast";
+
+                }else{
+
+                    document.getElementById('modalTitle').innerText =
+                        currentItem.Title;
+
+                    document.getElementById('submitBtn').innerText =
+                        "パスワードを確認して更新する";
+
+                    document.getElementById('submitBtn').className = "";
+                }
+
+            }else{
+
                 fTitle.readOnly = false;
                 fBody.readOnly = false;
                 fTags.readOnly = false;
-                document.getElementById('modalTitle').innerText = "新規データの追加";
+
                 fAuthorLabel.style.display = "block";
-                document.getElementById('submitBtn').innerText = "データを保存する";
+
+                // ===== viewモード =====
+                if(mode === "view"){
+
+                    document.getElementById('modalTitle').innerText =
+                        currentItem ? currentItem.Title : "詳細";
+
+                // ===== 新規追加モード =====
+                }else{
+
+                    document.getElementById('modalTitle').innerText =
+                        "新規データの追加";
+                }
+
+                document.getElementById('submitBtn').innerText =
+                    "データを保存する";
+
                 document.getElementById('submitBtn').className = "";
+
+                const submitBtn = document.getElementById('submitBtn');
+
+                submitBtn.disabled = false;
             }
         }
 
         async function saveData() {
-            const btn = document.getElementById('submitBtn');
-            const isDelete = document.getElementById('modalTitle').innerText.includes("削除");
-            const mode = document.getElementById('f-id').value ? (isDelete ? "delete" : "edit") : "add";
-            const rawPassword = document.getElementById('f-pass').value;
 
-            if(!rawPassword) {
-                alert("本人確認のためパスワードを入力してください");
-                return;
-            }
+            const btn = document.getElementById('submitBtn');
+
+            const isDelete = currentMode === "delete";
+
+            const mode =
+                document.getElementById('f-id').value
+                    ? (currentMode === "delete" ? "delete" : "edit")
+                    : "add";
+            const rawPassword = document.getElementById('f-pass').value;
 
             // 削除時はタイトル・本文の空チェックをスルー
             if (!isDelete) {
@@ -324,7 +792,10 @@
                 }
             }
 
-            const hashedPassword = await hashPassword(rawPassword);
+            const hashedPassword =
+                rawPassword
+                    ? await hashPassword(rawPassword)
+                    : "";
             
             const payload = {
                 mode: mode,
@@ -355,6 +826,9 @@
                 }
             } catch (e) {
                 alert("通信エラーが発生しました");
+
+            } finally {
+
                 btn.disabled = false;
                 btn.innerText = originalText;
             }

@@ -912,7 +912,7 @@
 
                 (currentItem.isProtected
                     ? '<span class="tag protect-tag">🔒 保護済み</span>'
-                    : '<span class="tag open-tag">🌐 共同編集可</span>'
+                    : '<span class="tag open-tag">🌐 編集可</span>'
                 )
 
                 +
@@ -963,7 +963,7 @@
 
                         ${item.isProtected
                             ? '<span class="tag protect-tag">🔒 保護済み</span>'
-                            : '<span class="tag open-tag">🌐 共同編集可</span>'
+                            : '<span class="tag open-tag">🌐 編集可</span>'
                         }
 
                         ${item.Tags
@@ -1051,7 +1051,7 @@
                     fPass.placeholder = "不要";
 
                     passwordHint.innerText =
-                        "この投稿は共同編集可能です。パスワードは不要です。";
+                        "この投稿は編集可能です。パスワードは不要です。";
                 }
 
                 if(isDelete){

@@ -402,158 +402,344 @@
         ========================= */
         @media (max-width: 600px) {
 
+            :root{
+                --pico-font-size:15px;
+            }
+
             body{
                 padding:0;
+                background:#f5f5f2;
             }
 
             main.container{
                 width:100%;
                 max-width:100%;
-                padding:0.8rem;
+                padding:0.9rem;
             }
 
-            /* ヘッダー */
+            /* =========================
+            ヘッダー
+            ========================= */
+
             .header-flex{
                 flex-direction:column;
                 align-items:stretch;
-                gap:12px;
+                gap:10px;
+                margin-bottom:0.8rem;
             }
 
             .header-flex h2{
                 font-size:1.5rem;
-                margin-bottom:0;
+                margin:0;
+
+                letter-spacing:-0.02em;
             }
 
             .toolbar{
                 width:100%;
-                flex-direction:column;
-                align-items:stretch;
                 gap:8px;
             }
 
             .toolbar input{
-                width:100%;
-                font-size:16px; /* iPhoneズーム防止 */
+                flex:1;
+
+                height:42px;
+
+                font-size:16px !important;
+
+                border-radius:10px;
             }
 
             .add-btn{
-                width:100% !important;
-                height:44px;
-                font-size:0.95rem;
+                width:auto !important;
+
+                padding:0 16px;
+
+                height:42px;
+
+                font-size:0.9rem;
+
+                border-radius:10px;
             }
 
-            /* ガイド */
+            /* =========================
+                利用ガイド
+            ========================= */
+
             .usage-guide{
-                font-size:0.75rem;
-                padding:0.7rem;
+                padding:0.9rem;
+
+                border-radius:12px;
+
+                font-size:0.76rem;
+
+                line-height:1.7;
             }
 
-            /* タグ */
+            .usage-guide summary{
+                font-size:0.85rem;
+                font-weight:700;
+            }
+
+            .usage-guide ul{
+                padding-left:1rem;
+                margin-top:0.7rem;
+            }
+
+            /* =========================
+                タグ一覧
+            ========================= */
+
             #tag-cloud{
                 gap:6px;
                 margin-bottom:1rem;
             }
 
             .tag-chip{
-                font-size:0.72rem;
                 padding:5px 12px;
+
+                font-size:0.72rem;
+
+                border-radius:999px;
             }
 
-            /* カード一覧 */
+            /* =========================
+                投稿一覧
+            ========================= */
+
             #list{
                 grid-template-columns:1fr;
                 gap:10px;
             }
 
             article.card{
-                padding:0.9rem;
-                border-radius:10px;
+
+                padding:1rem;
+
+                border-radius:14px;
+
+                box-shadow:
+                    0 1px 2px rgba(0,0,0,0.04);
+
+                transition:none;
             }
 
             .card-title{
+
                 font-size:1rem;
-                line-height:1.4;
+
+                line-height:1.45;
+
+                margin-bottom:0.45rem;
             }
 
             .card-body{
+
                 font-size:0.82rem;
-                line-height:1.6;
+
+                line-height:1.75;
+
+                color:#666;
+
+                margin-bottom:0.9rem;
             }
 
             .author-tag{
+                margin-top:0.7rem;
+
                 font-size:0.68rem;
             }
 
-            /* モーダル */
+            .tag{
+                font-size:0.66rem;
+
+                padding:2px 7px;
+
+                border-radius:999px;
+            }
+
+            /* =========================
+                モーダル
+            ========================= */
+
             dialog{
                 padding:0;
+                background:rgba(0,0,0,0.4);
             }
 
             dialog article{
+
                 width:100% !important;
                 max-width:100% !important;
 
                 min-height:100vh;
 
                 margin:0;
+
                 border-radius:0;
 
-                padding:1rem;
+                padding:
+                    calc(env(safe-area-inset-top) + 0.9rem)
+                    1rem
+                    calc(env(safe-area-inset-bottom) + 1rem);
+
+                overflow-y:auto;
             }
 
-            /* モーダルタイトル */
+            dialog header{
+
+                position:sticky;
+
+                top:0;
+
+                background:#fff;
+
+                z-index:10;
+
+                padding-bottom:0.8rem;
+
+                margin-bottom:1rem !important;
+
+                border-bottom:1px solid #ecece7;
+            }
+
+            /* タイトル */
+
             #modalTitle{
-                font-size:1.25rem !important;
-                line-height:1.4;
-                padding-right:28px;
+
+                font-size:1.2rem !important;
+
+                line-height:1.45;
+
+                font-weight:800;
+
+                padding-right:30px;
+
+                color:#2f2f2f;
+            }
+
+            /* 作成者 */
+
+            #viewAuthor{
+
+                font-size:0.74rem !important;
+
+                margin-bottom:1rem !important;
+
+                color:#8d8d88 !important;
             }
 
             /* 本文 */
+
             #viewBody{
-
-                font-size:0.95rem;
-
-                line-height:1.9;
 
                 padding:1rem;
 
-                max-height:55vh;
+                border-radius:14px;
+
+                font-size:0.95rem;
+
+                line-height:1.95;
+
+                background:#f8f8f5;
+
+                border:1px solid #ecece7;
+
+                max-height:none;
+
+                overflow:visible;
             }
 
-            /* 編集フォーム */
-            #editMode .grid{
-                grid-template-columns:1fr;
+            /* タグ */
+
+            #viewTags{
+                margin-top:1rem !important;
             }
 
-            #editMode input,
-            #editMode textarea{
-                font-size:16px; /* iOSズーム防止 */
-            }
+            /* フッター */
 
-            #editMode textarea{
-                min-height:220px;
-            }
-
-            /* ボタン */
-            .btn-sm{
-                font-size:0.72rem !important;
-                padding:0.35rem 0.7rem !important;
-            }
-
-            #submitBtn{
-                width:100%;
-                height:46px;
-                margin-top:1.2rem;
-            }
-
-            /* footer */
             #viewMode footer{
-                gap:6px;
-                flex-wrap:wrap;
+
+                gap:8px;
+
+                margin-top:1.5rem !important;
+
+                padding-top:1rem !important;
             }
 
             #viewMode footer button{
                 flex:1;
+            }
+
+            /* 小ボタン */
+
+            .btn-sm{
+
+                height:40px;
+
+                font-size:0.75rem !important;
+
+                padding:0 0.8rem !important;
+
+                border-radius:10px !important;
+            }
+
+            /* =========================
+                編集フォーム
+            ========================= */
+
+            #editMode .grid{
+                grid-template-columns:1fr;
+                gap:0.8rem;
+            }
+
+            #editMode input,
+            #editMode textarea{
+
+                font-size:16px !important;
+
+                border-radius:10px;
+            }
+
+            #editMode textarea{
+
+                min-height:240px;
+
+                line-height:1.8;
+            }
+
+            #passwordHint{
+
+                display:block;
+
+                margin-top:0.35rem;
+
+                font-size:0.7rem;
+
+                line-height:1.5;
+
+                color:#888;
+            }
+
+            /* 保存ボタン */
+
+            #submitBtn{
+
+                width:100%;
+
+                height:46px;
+
+                border-radius:12px;
+
+                font-size:0.92rem;
+
+                margin-top:1.2rem !important;
+            }
+
+            /* closeボタン */
+
+            .close{
+                transform:scale(1.1);
             }
         }
     </style>

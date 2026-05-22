@@ -991,12 +991,34 @@
         }
 
         function openModal() {
+
             currentItem = null;
+
             document.getElementById('dataForm').reset();
+
             document.getElementById('f-id').value = "";
-            //document.getElementById('modalTitle').innerText = "新規データの追加";
+
+            /* 共同編集可を初期状態に戻す */
+            document.getElementById('f-shared').checked = false;
+
+            /* パスワード欄を有効化 */
+            const passInput = document.getElementById('f-pass');
+
+            passInput.disabled = false;
+
+            passInput.placeholder = "本人確認用";
+
+            passInput.value = "";
+
+            /* ヒント文を戻す */
+            document.getElementById('passwordHint').innerText =
+                "設定すると他の人は編集・削除できません";
+
             switchMode('edit');
-            document.getElementById('authorLabel').style.display = "block";
+
+            document.getElementById('authorLabel').style.display =
+                "block";
+
             document.getElementById('modal').showModal();
         }
 

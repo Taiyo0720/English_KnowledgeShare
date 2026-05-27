@@ -864,7 +864,7 @@
                     <input type="hidden" id="f-id">
                     <div class="grid">
                         <label>タイトル<input type="text" id="f-title" placeholder="例: 前置詞at" required></label>
-                        <label id="authorLabel">作成者名（任意）<input type="text" id="f-author" placeholder="あなたの名前"></label>
+                        <label id="authorLabel">作成者名（任意）<input type="text" id="f-author" placeholder="あなたの名前" autocomplete="username"></label>
                     </div>
                     <label>本文<textarea id="f-body" rows="8" required placeholder="ここに詳しく記入してください..."></textarea></label>
                     <div class="grid">
@@ -874,7 +874,8 @@
                             <input
                                 type="password"
                                 id="f-pass"
-                                placeholder="本人確認用">
+                                placeholder="本人確認用"
+                                autocomplete="current-password">
                             <small id="passwordHint"></small>
                         </label>
                     </div>
@@ -1057,7 +1058,9 @@
                     String(item.Pinned).toLowerCase()==="true"
                     ? "card-pinned"
                     : ""
-                }">
+                }"
+                    onclick="showDetail('${item.ID}')"
+                >
                     <div class="card-title">
                         ${
                             String(item.Pinned).toLowerCase()==="true"

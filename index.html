@@ -435,6 +435,19 @@
             margin-bottom:1rem;
         }
 
+        #viewBody a{
+
+            color:#3b82f6;
+        
+            text-decoration:underline;
+        
+            word-break:break-all;
+        }
+        
+        #viewBody a:hover{
+            opacity:0.8;
+        }
+
         /* ===== レスポンシブ ===== */
 
         @media (max-width:900px){
@@ -972,6 +985,12 @@
             safe = safe.replace(
                 /\[red\](.*?)\[\/red\]/g,
                 '<span class="red-text">$1</span>'
+            );
+
+            /* URL自動リンク */
+            safe = safe.replace(
+                /(https?:\/\/[^\s<]+)/g,
+                '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
             );
         
             /* エスケープ復元 */

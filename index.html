@@ -432,6 +432,17 @@
                 );
         }
 
+        #viewUpdated{
+
+            font-size:0.75rem;
+        
+            color:#999;
+        
+            margin-top:-0.4rem;
+        
+            margin-bottom:1rem;
+        }
+
         /* ===== レスポンシブ ===== */
 
         @media (max-width:900px){
@@ -851,6 +862,7 @@
             
             <div id="viewMode">
                 <p id="viewAuthor" style="font-size: 0.85rem; color: #999; margin-bottom: 0.8rem;"></p>
+                <p id="viewUpdated"></p>
                 <pre id="viewBody"></pre>
                 <div id="viewTags" style="margin-top: 1rem;"></div>
                 <footer style="text-align: right; padding-top: 1.5rem; border-top: 1px solid #eee; margin-top: 2rem;">
@@ -980,6 +992,13 @@
         }
         function showDetail(id) {
             const targetId = String(id);
+            const updated = new Date(item.UpdatedAt || "---");
+            const formattedDate =
+                updated.toLocaleDateString('ja-JP',{
+                    year:'numeric',
+                    month:'2-digit',
+                    day:'2-digit'
+                });
 
             currentItem = allData.find(item => item.ID === targetId);
 
@@ -993,6 +1012,7 @@
                 formatBody(currentItem.Body);
             document.getElementById('viewAuthor').innerText =
                 "作成者: " + currentItem.Author;
+            document.getElementById('viewUpdated').innerText = formattedDate;
 
             document.getElementById('viewTags').innerHTML =
 
@@ -1051,6 +1071,13 @@
 
             // 3. HTMLを生成
             list.innerHTML = filtered.map(item => {
+                const updated = new Date(item.UpdatedAt || "---");
+                const formattedDate =
+                    updated.toLocaleDateString('ja-JP',{
+                        year:'numeric',
+                        month:'2-digit',
+                        day:'2-digit'
+                    });
                 const shortBody = item.Body.length > 120 ? formatBody(item.Body).substring(0, 120) + "..." : formatBody(item.Body);
                 // item.ID を確実にシングルクォートで囲って渡す
                 return `
@@ -1085,7 +1112,11 @@
                         }
 
                     </div>
-                    <span class="author-tag">By ${item.Author}</span>
+                    <span class="author-tag">
+                        By ${item.Author || "匿名"}
+                        ・
+                        ${formattedDate}
+                    </span>
                 </article>
             `}).join('');
         }

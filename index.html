@@ -992,13 +992,9 @@
         }
         function showDetail(id) {
             const targetId = String(id);
-            const updated = new Date(item.UpdatedAt || "---");
+            const updated = new Date(currentItem.UpdatedAt || "---");
             const formattedDate =
-                updated.toLocaleDateString('ja-JP',{
-                    year:'numeric',
-                    month:'2-digit',
-                    day:'2-digit'
-                });
+                updated.toLocaleDateString('ja-JP');
 
             currentItem = allData.find(item => item.ID === targetId);
 
@@ -1012,7 +1008,7 @@
                 formatBody(currentItem.Body);
             document.getElementById('viewAuthor').innerText =
                 "作成者: " + currentItem.Author;
-            document.getElementById('viewUpdated').innerText = formattedDate;
+            document.getElementById('viewUpdated').innerText = "最終更新：" + formattedDate;
 
             document.getElementById('viewTags').innerHTML =
 
@@ -1073,11 +1069,7 @@
             list.innerHTML = filtered.map(item => {
                 const updated = new Date(item.UpdatedAt || "---");
                 const formattedDate =
-                    updated.toLocaleDateString('ja-JP',{
-                        year:'numeric',
-                        month:'2-digit',
-                        day:'2-digit'
-                    });
+                    updated.toLocaleDateString('ja-JP');
                 const shortBody = item.Body.length > 120 ? formatBody(item.Body).substring(0, 120) + "..." : formatBody(item.Body);
                 // item.ID を確実にシングルクォートで囲って渡す
                 return `

@@ -415,6 +415,11 @@
             color:#46624b;
         }
 
+        .red-text{
+            color:#c0392b;
+            font-weight:600;
+        }
+
         /* ===== レスポンシブ ===== */
 
         @media (max-width:900px){
@@ -918,6 +923,37 @@
             render(); // リストを更新
         }
 
+        function escapeHtml(str){
+
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+        
+        function formatBody(text){
+        
+            /* まずHTMLを無効化 */
+            let safe = escapeHtml(text);
+        
+            /* 改行 */
+            safe = safe.replace(/\n/g, "<br>");
+        
+            /* 太字 */
+            safe = safe.replace(
+                /\*\*(.*?)\*\*/g,
+                "<strong>$1</strong>"
+            );
+        
+            /* 赤字 */
+            safe = safe.replace(
+                /\[red\](.*?)\[\/red\]/g,
+                '<span class="red-text">$1</span>'
+            );
+        
+            return safe;
+        }
+
         function showDetail(id) {
             const targetId = String(id);
 
@@ -929,7 +965,8 @@
             }
 
             document.getElementById('modalTitle').innerText = currentItem.Title;
-            document.getElementById('viewBody').innerText = currentItem.Body;
+            document.getElementById('viewBody').innerHTML =
+                formatBody(currentItem.Body);
             document.getElementById('viewAuthor').innerText =
                 "作成者: " + currentItem.Author;
 

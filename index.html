@@ -338,19 +338,29 @@
         /* ===== 小ボタン ===== */
 
         .btn-sm{
+        
             width:auto !important;
-
-            min-width:unset !important;
-
-            margin:0 !important;
-
-            padding:0.33rem 0.78rem !important;
-
-            font-size:0.72rem !important;
-
-            font-weight:600;
-
-            border-radius:8px !important;
+        
+            min-width:110px;
+        
+            height:42px;
+        
+            padding:0 1.1rem !important;
+        
+            font-size:0.82rem !important;
+        
+            font-weight:700;
+        
+            border-radius:12px !important;
+        
+            transition:
+                background 0.15s,
+                border-color 0.15s,
+                transform 0.1s;
+        }
+        
+        .btn-sm:hover{
+            transform:translateY(-1px);
         }
 
         .secondary.outline.btn-sm{
@@ -378,7 +388,8 @@
             resize:vertical;
         }
 
-        /* モーダル下部 */
+        /* ===== モーダル下部 ===== */
+        
         #viewMode footer,
         #editMode footer{
         
@@ -386,15 +397,21 @@
         
             bottom:0;
         
-            background:rgba(255,255,255,0.92);
+            display:flex;
         
-            backdrop-filter:blur(10px);
+            justify-content:flex-end;
         
-            border-top:1px solid #e5e5e1;
+            gap:10px;
         
-            padding:1rem 0 0.2rem;
+            margin-top:1.8rem;
         
-            margin-top:1.5rem;
+            padding-top:1rem;
+        
+            background:transparent;
+        
+            border-top:1px solid #e2ddd3;
+        
+            backdrop-filter:none;
         
             z-index:5;
         }

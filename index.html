@@ -1003,7 +1003,7 @@
             
             const updated = new Date(currentItem.UpdatedAt || "---");
             const formattedDate =
-                updated.toLocaleTimeString('ja-JP');
+                updated.toLocaleString('ja-JP');
 
             document.getElementById('modalTitle').innerText = currentItem.Title;
             document.getElementById('viewBody').innerHTML =
@@ -1071,7 +1071,7 @@
             list.innerHTML = filtered.map(item => {
                 const updated = new Date(item.UpdatedAt || "---");
                 const formattedDate =
-                    updated.toLocaleTimeString('ja-JP');
+                    updated.toLocaleString('ja-JP');
                 const shortBody = item.Body.length > 120 ? formatBody(item.Body).substring(0, 120) + "..." : formatBody(item.Body);
                 // item.ID を確実にシングルクォートで囲って渡す
                 return `

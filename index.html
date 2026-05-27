@@ -1015,7 +1015,7 @@
 
             // 3. HTMLを生成
             list.innerHTML = filtered.map(item => {
-                const shortBody = item.Body.length > 120 ? item.Body.substring(0, 120) + "..." : item.Body;
+                const shortBody = item.Body.length > 120 ? formatBody(item.Body).substring(0, 120) + "..." : formatBody(item.Body);
                 // item.ID を確実にシングルクォートで囲って渡す
                 return `
                 <article class="card" onclick="showDetail('${item.ID}')">

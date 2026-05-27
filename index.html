@@ -378,6 +378,27 @@
             resize:vertical;
         }
 
+        /* モーダル下部 */
+        #viewMode footer,
+        #editMode footer{
+        
+            position:sticky;
+        
+            bottom:0;
+        
+            background:rgba(255,255,255,0.92);
+        
+            backdrop-filter:blur(10px);
+        
+            border-top:1px solid #e5e5e1;
+        
+            padding:1rem 0 0.2rem;
+        
+            margin-top:1.5rem;
+        
+            z-index:5;
+        }
+
         /* ===== hidden ===== */
 
         .hidden{
@@ -1148,7 +1169,8 @@
                 title: document.getElementById('f-title').value,
                 body: document.getElementById('f-body').value,
                 tags: document.getElementById('f-tags').value,
-                author: document.getElementById('f-author').value,
+                author: document.getElementById('f-author').value.trim()
+                    || "匿名",
                 password: hashedPassword
             };
 

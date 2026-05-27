@@ -933,8 +933,14 @@
         
         function formatBody(text){
         
-            /* まずHTMLを無効化 */
+            /* HTML無効化 */
             let safe = escapeHtml(text);
+        
+            /* エスケープ保存 */
+            safe = safe
+                .replace(/\\\*/g, "__ESCAPED_ASTERISK__")
+                .replace(/\\\[red\]/g, "__ESCAPED_RED_OPEN__")
+                .replace(/\\\[\/red\]/g, "__ESCAPED_RED_CLOSE__");
         
             /* 改行 */
             safe = safe.replace(/\n/g, "<br>");
@@ -951,9 +957,14 @@
                 '<span class="red-text">$1</span>'
             );
         
+            /* エスケープ復元 */
+            safe = safe
+                .replace(/__ESCAPED_ASTERISK__/g, "*")
+                .replace(/__ESCAPED_RED_OPEN__/g, "[red]")
+                .replace(/__ESCAPED_RED_CLOSE__/g, "[/red]");
+        
             return safe;
         }
-
         function showDetail(id) {
             const targetId = String(id);
 

@@ -420,6 +420,18 @@
             font-weight:600;
         }
 
+        .card-pinned{
+
+            border-left:4px solid #c59a3d;
+        
+            background:
+                linear-gradient(
+                    90deg,
+                    #fff8ea 0%,
+                    #ffffff 14%
+                );
+        }
+
         /* ===== レスポンシブ ===== */
 
         @media (max-width:900px){
@@ -1018,6 +1030,18 @@
 
             // 2. ★最新順にするために配列を逆順にする
             filtered = [...filtered].reverse();
+            
+            /* ピン留めを先頭へ */
+            filtered.sort((a,b)=>{
+            
+                const aPinned =
+                    String(a.Pinned).toLowerCase() === "true";
+            
+                const bPinned =
+                    String(b.Pinned).toLowerCase() === "true";
+            
+                return Number(bPinned) - Number(aPinned);
+            });
 
             if(filtered.length === 0) {
                 list.innerHTML = "<p style='grid-column: 1/-1; text-align: center; padding: 2rem; color: #999;'>該当するデータが見つかりません。</p>";
@@ -1029,8 +1053,19 @@
                 const shortBody = item.Body.length > 120 ? formatBody(item.Body).substring(0, 120) + "..." : formatBody(item.Body);
                 // item.ID を確実にシングルクォートで囲って渡す
                 return `
-                <article class="card" onclick="showDetail('${item.ID}')">
-                    <div class="card-title">${item.Title}</div>
+                <article class="card ${
+                    String(item.Pinned).toLowerCase()==="true"
+                    ? "card-pinned"
+                    : ""
+                }">
+                    <div class="card-title">
+                        ${
+                            String(item.Pinned).toLowerCase()==="true"
+                            ? "📌 "
+                            : ""
+                        }
+                        ${item.Title}
+                    </div>
                     <div class="card-body">${shortBody}</div>
                     <div>
 
